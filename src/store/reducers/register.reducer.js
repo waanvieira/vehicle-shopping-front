@@ -11,9 +11,9 @@ const initialState = {
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default (state = initialState, { type, payLoad }) => {
+export default (state = initialState, { type, payLoad }) => {    
     switch (type) {
-
+        
         case actionTypes.CHANGE:
             return { ...state,
                     user: {

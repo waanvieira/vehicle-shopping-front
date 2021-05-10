@@ -14,8 +14,7 @@ const initialState = {
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default (state = initialState, { type, payLoad, isLoadMore }) => {
-    console.warn(payLoad)
+export default (state = initialState, { type, payLoad, isLoadMore }) => {    
     switch (type) {        
         case actionTypes.INDEX:
             if (isLoadMore) {                

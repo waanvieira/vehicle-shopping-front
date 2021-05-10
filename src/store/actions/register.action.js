@@ -8,19 +8,19 @@ export const actionTypes = {
     SUCCESS: 'REGISTER_SUCCESS'
 }
 
-export const change = (payload) => ({
+export const change = (payLoad) => ({
     type: actionTypes.CHANGE,
-    payload
+    payLoad
 })
 
-export const errors = (payload) => ({
+export const errors = (payLoad) => ({
     type: actionTypes.ERROR,
-    payload
+    payLoad
 })
 
-export const success = (payload) => ({
+export const success = (payLoad) => ({
     type: actionTypes.SUCCESS,
-    payload
+    payLoad
 })
 
 export const setUserToken = token => dispatch => {
