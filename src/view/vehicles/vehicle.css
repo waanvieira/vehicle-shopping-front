@@ -71,3 +71,7 @@
     position: fixed;
     bottom: 30px;
 }
+
+.vehicle-img {
+    background-size: cover;    
+}

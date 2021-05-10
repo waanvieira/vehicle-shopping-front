@@ -34,10 +34,10 @@ export const indexResponse = (payLoad, isLoadMore) => ({
     isLoadMore
 })
 
-export const index = (query, isLoadMore) => dispatch => {
+export const index = (query, isLoadMore) => dispatch => {    
     return HttpAuth.get('vehicles?' + new URLSearchParams(query))
         .then(response => typeof response !== 'undefined' && dispatch(indexResponse(response.data, isLoadMore)))
-        .catch(error => {
+        .catch(error => {            
             if (error.response) {
                 dispatch(changeNotify({
                     open: true,
@@ -66,8 +66,7 @@ export const store = () => dispatch => {
     // })
 }
 
-export const update = (data) => dispatch => {
-    
+export const update = (data) => dispatch => {    
     dispatch(changeLoading({
         open: true,
         msg: 'Atualizando veículo'
@@ -91,20 +90,9 @@ export const update = (data) => dispatch => {
         })
 }
 
-export const show = (id) => dispatch => {
-    return HttpAuth.get('vehicles/' + id)
+export const show = (id) => dispatch => {    
+    return HttpAuth.get(`vehicles/show/${id}`)
         .then(response => typeof response !== 'undefined' && dispatch(indexResponse(response.data)))
-        .catch(error => {
-            if (error.response) {
-                dispatch(changeNotify({
-                    open: true,
-                    class: 'error',
-                    msg: 'Não foi possível listar os veículos'
-                }))
-
-                dispatch(error(error.response.data.errors))
-            }
-        })
 }
 
 export const destroyResponse = (payLoad) => ({
@@ -155,7 +143,7 @@ export const cep = (zipCode) => dispatch => {
     }
 }
 
-export const brand = (type) => dispatch => {    
+export const brand = (type) => dispatch => {
     dispatch(changeLoading({ open: true }))
     return HttpAuth.get(`vehicles/${type}/brand`)
         .then(response => {
@@ -196,7 +184,7 @@ export const uploadPhotoResponse = (payLoad) => ({
 export const uploadPhoto = (item) => dispatch => {    
     dispatch(indexResponse({upload_photo: true}))
     
-    return HttpUpload.post('vehicle/photo', item)
+    return HttpUpload.post('vehicles/photo', item)
     .then(response => {
         dispatch(indexResponse({upload_photo:false}))
         
@@ -225,7 +213,7 @@ export const deletePhotoResponse = (payLoad) => ({
 
 export const deletePhoto = (id) => dispatch => {
     
-    return HttpAuth.delete(`vehicle/photo/${id}`)
+    return HttpAuth.delete(`vehicles/photo/${id}`)
     .then(response => {
         console.warn(response)
         if (typeof response !== 'undefined') {
@@ -262,7 +250,7 @@ export const reorderPhotoResponse = (payLoad) => ({
 
 export const reorderPhoto = (position, data) => dispatch => {
     dispatch(reorderPhotoResponse(data));    
-    return HttpAuth.put('vehicle/photo/null', position)
+    return HttpAuth.put('vehicles/photo/null', position)
         .then(response => {
             if (typeof resposne !== 'undefined') {
                 if (response.data.success) {

@@ -14,15 +14,16 @@ const initialState = {
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default (state = initialState, { type, payLoad, isLoadMore }) => {    
-    switch (type) {
+export default (state = initialState, { type, payLoad, isLoadMore }) => {
+    console.warn(payLoad)
+    switch (type) {        
         case actionTypes.INDEX:
-            if (isLoadMore) {
+            if (isLoadMore) {                
                 //isLoadMOre quando tem paginação, aqui estamos concatenando os dados retornados
                 //da nossa api
                 payLoad.vehicles.data = state.vehicles.data.concat(payLoad.vehicles.data)
             }
-
+            
             return { ...state, ...payLoad }
 
         case actionTypes.DESTROY:
@@ -35,6 +36,7 @@ export default (state = initialState, { type, payLoad, isLoadMore }) => {
             }
 
         case actionTypes.CHANGE:
+            console.warn('Change')
             return {
                 ...state,
                 vehicle: {

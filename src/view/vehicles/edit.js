@@ -14,7 +14,7 @@ import { Link, Redirect } from 'react-router-dom';
 import './vehicle.css';
 
 const SortableItem = SortableElement(({ value }) =>
-    <div className="bg-img" style={{ backgroundImage: `url(${apiUrl}/vehicle/photo/${value.uuid})` }}></div>    
+    <div className="bg-img" style={{ backgroundImage: `url(${apiUrl}/vehicles/photo/${value.uuid})` }}></div>    
 );
 
 const SortableList = SortableContainer(({ children }) => {
@@ -70,12 +70,14 @@ export default function Vehicles(props) {
 
     const vehicleId = (props.match.params.id) ?? null;
     const [isLoading, setLoading] = useState(true);
-
+    
     useEffect(() => {
    
         const index = () => {
             if (vehicleId) {
-                dispatch(show(vehicleId).then(response => response && setLoading(false)))
+                
+                dispatch(show(vehicleId)).then(response => response && setLoading(false))
+                
             } else {
                 dispatch(store()).then(response => response && setLoading(false))
             }
@@ -127,7 +129,7 @@ export default function Vehicles(props) {
         <>
             {(data.success) && <Redirect to="/vehicles" />}
             <Header title="Gestão de veículo" button={
-                            <Button color="inherit" className="ml-auto">Salvar</Button>
+                            <Button color="inherit" onClick={() => dispatch(update(data.vehicle))} className="ml-auto">Salvar</Button>
                             }/>
             <div className="container my-4 pt-3">
                 {(isLoading) ? <div className="d-flex justify-content-center mt-5 pt-5"><CircularProgress /></div> :
@@ -135,7 +137,6 @@ export default function Vehicles(props) {
                     <div className="row">
                         <div className="col-md-7">
                             <h3 className="font-weight-normal mt-4 mb-4">Localização do veiculo</h3>
-
                             <div className="card card-body" onClick={() => setState({ ...state, tips: 0 })}>
                                 <div className="row">
                                     <div className="form-group ml-3">
@@ -214,14 +215,14 @@ export default function Vehicles(props) {
                                         onChange={event => {
                                             dispatch(change({
                                                 type: event.target.value,
-                                                brand: null,
-                                                model: null,
-                                                version: null,
-                                                vehicle_gerbox: null,
-                                                vehicle_fuel: null,
-                                                vehicle_steering: null,
-                                                vehicle_motorpower: null,
-                                                vehicle_doors: null
+                                                brand_id: null,
+                                                model_id: null,
+                                                version_id: null,
+                                                gerbox_id: null,
+                                                fuel_id: null,
+                                                steering_id: null,
+                                                motor_power_id: null,
+                                                doors_id: null
                                             }))
                                             dispatch(brand(event.target.value))
                                             if (data.error.type) {
@@ -240,18 +241,18 @@ export default function Vehicles(props) {
                                 <div className="form-group">
                                     <label className="label-custom">Marcas</label>
                                     <Select
-                                        error={data.error.brand && true}
-                                        value={data.vehicle.brand || ''}
+                                        error={data.error.brand_id && true}
+                                        value={data.vehicle.brand_id || ''}
                                         onChange={event => {
                                             dispatch(change({
-                                                brand: event.target.value,
+                                                brand_id: event.target.value,
                                                 model: null,
                                                 version: null,
                                             }))
 
                                             dispatch(model(data.vehicle.type, event.target.value))
-                                            if (data.error.brand) {
-                                                delete data.error.brand
+                                            if (data.error.brand_id) {
+                                                delete data.error.brand_id
                                             }
                                         }}
                                     >
@@ -259,29 +260,29 @@ export default function Vehicles(props) {
                                             <MenuItem key={item.id} value={item.value}>{item.name}</MenuItem>
                                         ))}
                                     </Select>
-                                    {(data.error.brand) &&
-                                        <strong className="text-danger">{data.error.brand[0]}</strong>
+                                    {(data.error.brand_id) &&
+                                        <strong className="text-danger">{data.error.brand_id[0]}</strong>
                                     }
                                 </div>
                                 <div className="row">
                                     <div className="col-md-6 form-group">
                                         <label className="label-custom">Modelo</label>
                                         <Select
-                                            error={data.error.models && true}
-                                            value={data.vehicle.model || ''}
+                                            error={data.error.model_id && true}
+                                            value={data.vehicle.model_id || ''}
                                             onChange={event => {
                                                 dispatch(change({
-                                                    model: event.target.value,
-                                                    version: null,
-                                                    vehicle_gerbox: null,
-                                                    vehicle_fuel: null,
-                                                    vehicle_steering: null,
-                                                    vehicle_motorpower: null,
-                                                    vehicle_doors: null,
+                                                    model_id: event.target.value,
+                                                    version_id: null,
+                                                    gerbox_id: null,
+                                                    fuel_id: null,
+                                                    steering_id: null,
+                                                    motor_power_id: null,
+                                                    doors_id: null,
                                                 }))
-                                                dispatch(version(data.vehicle.brand, event.target.value))
-                                                if (data.error.model) {
-                                                    delete data.error.model
+                                                dispatch(version(data.vehicle.brand_id, event.target.value))
+                                                if (data.error.model_id) {
+                                                    delete data.error.model_id
                                                 }
                                             }}
                                         >
@@ -289,19 +290,19 @@ export default function Vehicles(props) {
                                                 <MenuItem key={item.id} value={item.value}>{item.name}</MenuItem>
                                             ))}
                                         </Select>
-                                        {(data.error.model) &&
-                                            <strong className="text-danger">{data.error.model[0]}</strong>
+                                        {(data.error.model_id) &&
+                                            <strong className="text-danger">{data.error.model_id[0]}</strong>
                                         }
                                     </div>
                                     <div className="col-md-6 form-group">
                                         <label className="label-custom">Ano</label>
                                         <Select
-                                            error={data.error.regdate && true}
-                                            value={data.vehicle.regdate || ''}
+                                            error={data.error.regdate_id && true}
+                                            value={data.vehicle.regdate_id || ''}
                                             onChange={event => {
-                                                dispatch(change({ regdate: event.target.value }))
-                                                if (data.error.model) {
-                                                    delete data.error.model
+                                                dispatch(change({ regdate_id: event.target.value }))
+                                                if (data.error.regdate_id) {
+                                                    delete data.error.regdate_id
                                                 }
                                             }}
                                         >
@@ -309,26 +310,26 @@ export default function Vehicles(props) {
                                                 <MenuItem key={item.id} value={item.value}>{item.name}</MenuItem>
                                             ))}
                                         </Select>
-                                        {(data.error.regdate) &&
-                                            <strong className="text-danger">{data.error.regdate[0]}</strong>
+                                        {(data.error.regdate_id) &&
+                                            <strong className="text-danger">{data.error.regdate_id[0]}</strong>
                                         }
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <label className="label-custom">Versão</label>
                                     <Select
-                                        error={data.error.version && true}
-                                        value={data.vehicle.version || ''}
+                                        error={data.error.version_id && true}
+                                        value={data.vehicle.version_id || ''}
                                         onChange={event => {
-                                            dispatch(change({ version: event.target.value }))
+                                            dispatch(change({ version_id: event.target.value }))
                                         }}
                                     >
                                         {data.version.map(item => (
                                             <MenuItem key={item.id} value={item.value}>{item.name}</MenuItem>
                                         ))}
                                     </Select>
-                                    {(data.error.version) &&
-                                        <strong className="text-danger">{data.error.version[0]}</strong>
+                                    {(data.error.version_id) &&
+                                        <strong className="text-danger">{data.error.version_id[0]}</strong>
                                     }
                                 </div>
                             </div>
@@ -339,8 +340,8 @@ export default function Vehicles(props) {
                                             <div className="col-md-6 form-group">
                                                 <label className="label-custom">Câmbio</label>
                                                 <Select
-                                                    value={data.vehicle.gearbox || ''}
-                                                    onChange={event => dispatch(change({ gearbox: event.target.value }))}
+                                                    value={data.vehicle.gearbox_id || ''}
+                                                    onChange={event => dispatch(change({ gearbox_id: event.target.value }))}
                                                 >
                                                     {data.gearbox.map(item => (
                                                         <MenuItem key={item.id} value={item.value}>{item.name}</MenuItem>
@@ -350,22 +351,23 @@ export default function Vehicles(props) {
                                             <div className="col-md-6 form-group">
                                                 <label className="label-custom">Combustível</label>
                                                 <Select
-                                                    value={data.vehicle.fuel || ''}
-                                                    onChange={event => dispatch(change({ fuel: event.target.value }))}
+                                                    error={data.error.fuel_id && true}
+                                                    value={data.vehicle.fuel_id || ''}
+                                                    onChange={event => dispatch(change({ fuel_id: event.target.value }))}
                                                 >
                                                     {data.fuel.map(item => (
                                                         <MenuItem key={item.id} value={item.value}>{item.name}</MenuItem>
                                                     ))}
                                                 </Select>
-                                                {(data.error.fuel) &&
-                                                    <strong className="text-danger">{data.error.fuel[0]}</strong>
+                                                {(data.error.fuel_id) &&
+                                                    <strong className="text-danger">{data.error.fuel_id[0]}</strong>
                                                 }
                                             </div>
                                             <div className="col-md-6 form-group">
                                                 <label className="label-custom">Força do motor</label>
                                                 <Select
-                                                    value={data.vehicle.motorpower || ''}
-                                                    onChange={event => dispatch(change({ motorpower: event.target.value }))}
+                                                    value={data.vehicle.motor_power_id || ''}
+                                                    onChange={event => dispatch(change({ motor_power_id: event.target.value }))}
                                                 >
                                                     {data.motorpower.map(item => (
                                                         <MenuItem key={item.id} value={item.value}>{item.name}</MenuItem>
@@ -375,8 +377,8 @@ export default function Vehicles(props) {
                                             <div className="col-md-6 form-group">
                                                 <label className="label-custom">Portas</label>
                                                 <Select
-                                                    value={data.vehicle.doors || ''}
-                                                    onChange={event => dispatch(change({ doors: event.target.value }))}
+                                                    value={data.vehicle.doors_id || ''}
+                                                    onChange={event => dispatch(change({ doors_id: event.target.value }))}
                                                 >
                                                     {data.doors.map(item => (
                                                         <MenuItem key={item.id} value={item.value}>{item.name}</MenuItem>

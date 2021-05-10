@@ -1,26 +1,26 @@
-import React from 'react'
-import { index } from '../../store/actions/vehicles.action'
+import React, { forwardRef, useEffect, useState } from 'react'
+import { index } from '../../store/actions/vehicle.action'
 import { Link } from 'react-router-dom'
-import { Button, CircularProgress } from '@material-ui/core'
-import { FaPlus } from 'react-icons/fa'
-import { SCROLL, rootUrl } from '../../config/App'
-
+import { Button, CircularProgress, IconButton, Menu, MenuItem, Slide, Fade } from '@material-ui/core'
+import { FaPlus, FaEllipsisV, FaClipboard, FaUser, FaLink, FaPencilAlt, FaTrash, FaShare } from 'react-icons/fa'
+import { SCROLL, apiUrl } from '../../config/App'
 import Header from '../header'
 import { useDispatch, useSelector } from 'react-redux'
+import { Fragment } from 'react'
 
 export default function Vehicles() {
   const dispatch = useDispatch()
-  const vehicles = useSelector(state => state.vehiclesReducer.vehicles)
-  const [isLoading, setLoading] = React.useState(true)
-  const [isLoadMore, setLoadMore] = React.useState(false)
-  const [query, setQuery] = React.useState({ page: 1 })
-  const [state, setState] = React.useState({
+  const vehicles = useSelector(state => state.vehicleReducer.vehicles)
+  const [isLoading, setLoading] = useState(true)
+  const [isLoadMore, setLoadMore] = useState(false)
+  const [query, setQuery] = useState({ page: 1 })
+  const [state, setState] = useState({
     isDeleted: null,
     menuEl: null,
     confirmEl: null
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.addEventListener('scroll', _handleScroll);
     _index();
   }, [])
@@ -43,6 +43,10 @@ export default function Vehicles() {
     }
   }
 
+  const _handleMenu = (event) => {
+    setState({ menuEl: event.currentTarget })
+  }
+
   const _index = (loadMore) => {
     dispatch(index(query, loadMore)).then(res => {
       if (res) {
@@ -51,6 +55,10 @@ export default function Vehicles() {
       }
     })
   }
+
+  const Transition = forwardRef((props, ref) => {
+    return <Slide direction="up" ref={ref} {...props} />
+  })
 
   return (
     <>
@@ -63,8 +71,8 @@ export default function Vehicles() {
               <Link to="/vehicles/create" className="ml-auto">
                 <Button variant="contained" color="primary" size="large">
                   <FaPlus size="1.5em" className="mr-2" />
-                    Cadastrar
-                </Button>
+                        Cadastrar
+                    </Button>
               </Link>
             </div>
 
@@ -77,25 +85,71 @@ export default function Vehicles() {
 
               <div className="p-2 p-md-3">
                 {vehicles.data.map((item, index) => (
-                  <React.Fragment key={index}>
-                    <div className="d-md-flex">
-                      <div className="d-flex">
-                        <div className="vehicle-img d-flex justify-content-center align-items-center">
-                          {(state.isDeleted === item.id) ?
-                            <CircularProgress color="secondary" /> :
-                            (item.cover && <img alt="" className="shadow rounded" src={rootUrl + 'thumb/vehicles/' + item.cover.img + '?u=' + item.cover.user_id + '&s=' + item.cover.vehicle_id + '&w=180&h=135'} />)
-                          }
-                        </div>
-                        <div className="vehicle-detail pl-3 pl-md-4">
-                          <h6>{item.vehicle_brand.label} {item.vehicle_model.label}</h6>
-                          <strong className="d-block">{item.vehicle_version.label}</strong>
-                          {(item.vehicle_price) &&
-                            <strong className="text-danger h5 d-block">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.vehicle_price)}</strong>
-                          }
-                        </div>
+                  <Fragment key={index}>
+                    <div className="d-flex my-3">
+                      <div className="vehicle-img d-flex justify-content-center align-items-center">
+                        {(state.isDeleted === item.id) ?
+                          <CircularProgress color="secondary" /> :
+                          (item.cover && <img alt="" className="shadow rounded" src={`${apiUrl}/vehicles/photo/${item.cover.uuid}?width=180&height=135`} />)
+                        }
+                      </div>
+                      <div className="vehicle-detail pl-3 pl-md-4">
+                        <h6>{item.brand ? item.brand.name : ''} {item.model ? item.model.name : ''}</h6>
+                        <strong className="d-block">{item.version ? item.version.name : ''}</strong>
+                        {(item.price) &&
+                          <strong className="text-danger h5 d-block">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.price)}</strong>
+                        }
+                      </div>
+
+                      <div className="ml-auto">
+                        <IconButton id={index} onClick={_handleMenu}>
+                          <FaEllipsisV />
+                        </IconButton>
+
+                        {(Boolean(state.menuEl)) &&
+                          <Menu
+                                anchorEl={state.menuEl}
+                                getContentAnchorEl={null}
+                                anchorOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'left'
+                                }}
+                                transformOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'right'
+                                }}
+                                TransitionComponent={window.innerWidth < 577 ? Transition : Fade}
+                                open={(index === parseInt(state.menuEl.id))}
+                                onClose={() => setState({ menuEl: null })}
+                                onClick={() => setState({ menuEl: null })}
+                            >
+                            <MenuItem>
+                              <FaClipboard size="0.8em" className="mr-4" />Notas
+                            </MenuItem>
+                            <MenuItem>
+                              <FaUser size="0.8em" className="mr-4" />Proprietário
+                            </MenuItem>
+                            <MenuItem>
+                              <FaLink size="0.8em" className="mr-4" />Visualizar
+                            </MenuItem>
+
+                            <div className="dropdown-divider" />
+                            <MenuItem>
+                              <Link to={`/vehicles/${item.uuid}/edit`}>
+                                <FaPencilAlt size="0.8em" className="mr-4" />Editar
+                              </Link>
+                            </MenuItem>
+                            <MenuItem>
+                              <FaTrash size="0.8em" className="mr-4" />Apagar
+                            </MenuItem>
+                            <MenuItem>
+                              <FaShare size="0.8em" className="mr-4" />Compartilhar
+                            </MenuItem>
+                          </Menu>
+                        }
                       </div>
                     </div>
-                  </React.Fragment>
+                  </Fragment>
                 ))}
               </div>
             </div>
