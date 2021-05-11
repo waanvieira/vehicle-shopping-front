@@ -7,7 +7,7 @@ export const actionTypes = {
     DESTROY: 'VEHICLE_DESTROY',
     CHANGE: 'VEHICLE_CHANGE',
     SUCCESS: 'VEHICLE_SUCCESS',
-    ERROR: 'VEHICLE_ERROR',
+    ERROR: 'VEHICLE_ERROR', 
     UPLOAD_PHOTO: 'VEHICLE_UPLOAD_PHOTO',
     DELETE_PHOTO: 'VEHICLE_DELETE_PHOTO',
     REORDER_PHOTO: 'VEHICLE_REORDER_PHOTO',
@@ -74,8 +74,7 @@ export const update = (data) => dispatch => {
 
     return HttpAuth.put(`vehicles/update/${data.uuid}`, data)
         .then(response => {
-            dispatch(changeLoading({ open: false }))
-            console.warn(response)
+            dispatch(changeLoading({ open: false }))            
             if (typeof response !== 'undefined') {
                 if (response.data.error) {
                     dispatch(success(false))
@@ -125,8 +124,7 @@ export const cep = (zipCode) => dispatch => {
     if (zipCode.length > 8) {
         return HttpApi.post('/webservice/cep', {
             cep: zipCode
-        }).then(response => {
-            console.warn(response)
+        }).then(response => {            
             if (typeof response !== 'undefined') {
 
                 dispatch(change(response.data))
@@ -214,8 +212,7 @@ export const deletePhotoResponse = (payLoad) => ({
 export const deletePhoto = (id) => dispatch => {
     
     return HttpAuth.delete(`vehicles/photo/${id}`)
-    .then(response => {
-        console.warn(response)
+    .then(response => {        
         if (typeof response !== 'undefined') {
             if (response.data.error) {
                 dispatch(changeNotify({

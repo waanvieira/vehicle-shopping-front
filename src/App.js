@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Routes from './Routes';
 import { Loading, Notify, Alert } from './view/components'
 import './global.css'
+import './font-total-express/style.css'
 
 const theme = createMuiTheme ({
     palete: {

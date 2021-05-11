@@ -1,7 +1,7 @@
 import { Button, Checkbox, CircularProgress, FormControlLabel, InputAdornment, MenuItem, Select, TextField } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { change, show, store, cep, brand, model, version, uploadPhoto, deletePhoto, reorderPhoto, update } from '../../store/actions/vehicle.action';
+import { change, show, store, cep, brand, model, version, uploadPhoto, deletePhoto, reorderPhoto, update, indexResponse } from '../../store/actions/vehicle.action';
 import Header from '../header';
 import MaskedInput from 'react-text-mask';
 import NumberFormat from 'react-number-format';
@@ -59,7 +59,7 @@ const NumberFormatCustom = (props) => {
 export default function Vehicles(props) {
     const dispatch = useDispatch();
     const data = useSelector(state => state.vehicleReducer);
-    const [state, setState] = useState({
+    const [state, setState] = useState({        
         isLoading: true,
         isLoadingCep: false,
         isDeleted: null,
@@ -67,7 +67,7 @@ export default function Vehicles(props) {
         tips: 0,
         confirmEl: null,
     });
-
+    console.warn(state.confirmEl)
     const vehicleId = (props.match.params.id) ?? null;
     const [isLoading, setLoading] = useState(true);
     
@@ -86,6 +86,13 @@ export default function Vehicles(props) {
         index();
 
     }, [dispatch, vehicleId])
+
+    useEffect(() => {
+        return () => {
+            dispatch(indexResponse({ success: false }))
+        }
+        //eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const handleUpload = (event) => {
         [...event.target.files].map(img => {
@@ -110,13 +117,11 @@ export default function Vehicles(props) {
             }))
     }
 
-    const handleConfirm = (event) => {        
-        console.warn(state.confirmEl)
+    const handleConfirm = event => {        
         setState({
             ...state,
             confirmEl: event.currentTarget
         })
-        
     }
 
     const onSortEnd = ({ oldIndex, newIndex }) => {
@@ -139,7 +144,7 @@ export default function Vehicles(props) {
                             <h3 className="font-weight-normal mt-4 mb-4">Localização do veiculo</h3>
                             <div className="card card-body" onClick={() => setState({ ...state, tips: 0 })}>
                                 <div className="row">
-                                    <div className="form-group ml-3">
+                                    <div className="form-group ml-3">                                        
                                         <label className="label-custom">CEP</label>
                                         <TextField
                                             style={(state.isLoadingCep) ? { opacity: 0.5 } : {}}
@@ -518,13 +523,12 @@ export default function Vehicles(props) {
                                         onChange={text => dispatch(change({ description: text.target.value }))}
                                     />
                                 </div>
-                            </div>
-                            <h3 className="font-weight-normal my-4">Fotos</h3>
-                            <div className="card card-body" onClick={() => setState({ ...state, tips: 4 })}>
+                            </div>                            
+                            <h3 className="font-weight-normal my-4" onClick={() => setState({ ...state, tips: 4 })}>Fotos</h3>
+                            <div className="card card-body">
                                 {(data.error.photos) &&
                                     <strong className="text-danter">{data.error.photos[0]}</strong>
                                 }
-
                                 <SortableList axis="xy" onSortEnd={onSortEnd}>
                                     {data.vehicle.photos.map((item, index) => (
                                         <div key={item.id} className="col-6 col-md4">
@@ -533,7 +537,8 @@ export default function Vehicles(props) {
                                                     <CircularProgress size="30" color="secundary" />
                                                     :
                                                     <>
-                                                        <span id={item.id} onClick={handleConfirm} className="img-action d-flex justify-content-center aligns-items-center">
+                                                        <span id={item.id} onClick={handleConfirm}
+                                                            className="img-action d-flex justify-content-center aligns-items-center">
                                                             <div className="app-icon d-flex">
                                                                 <FaTrash
                                                                     color="#fff"
@@ -545,8 +550,8 @@ export default function Vehicles(props) {
                                                             key={`item-${item.id}`}
                                                             index={index}
                                                             value={item}
-                                                        />
-                                                        {(Boolean(state.confirmEl)) &&
+                                                        />                                                          
+                                                        {(Boolean(state.confirmEl)) && 
                                                             <Confirm
                                                                 open={(item.id === parseInt(state.confirmEl.id))}
                                                                 onConfirm={() => _deletePhoto(item.uuid)}
@@ -555,12 +560,13 @@ export default function Vehicles(props) {
                                                                     confirmEl: null
                                                                 })}
                                                             />
-                                                        }
+                                                        }                                                            
                                                     </>
                                                 }
                                             </div>
-                                        </div>
+                                        </div>                                        
                                     ))}
+                                    
 
                                     <div className="col-6 col-md-4">
                                         <div className="box-image box-upload d-flex justify-content-center align-items-center-my-3">

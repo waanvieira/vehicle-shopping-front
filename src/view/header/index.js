@@ -110,12 +110,15 @@ export default function Header(props) {
                             meuteste@dev.com.br
                         </ListItem>
                         <Divider className="mx-3"/>
-                        <ListItem>
+                        <ListItem>                        
                             <ListItemIcon>
-                                <FaCar />
+                            <Link className="nav-link" to="/vehicles">
+                                <FaCar />                            
+                            </Link>
                             </ListItemIcon>
-                            <ListItemText primary="Veiculos"/>                            
-                        </ListItem>
+                            <ListItemText primary="Veiculos"/>
+                            
+                        </ListItem>                        
                         <ListItem>
                             <ListItemIcon>
                                 <FaUsers />

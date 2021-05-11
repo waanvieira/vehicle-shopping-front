@@ -35,7 +35,7 @@ export default (state = initialState, { type, payLoad, isLoadMore }) => {
             }
 
         case actionTypes.CHANGE:
-            console.warn('Change')
+            
             return {
                 ...state,
                 vehicle: {

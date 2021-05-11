@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useState } from 'react'
-import { index } from '../../store/actions/vehicle.action'
+import { destroy, index } from '../../store/actions/vehicle.action'
 import { Link } from 'react-router-dom'
 import { Button, CircularProgress, IconButton, Menu, MenuItem, Slide, Fade } from '@material-ui/core'
 import { FaPlus, FaEllipsisV, FaClipboard, FaUser, FaLink, FaPencilAlt, FaTrash, FaShare } from 'react-icons/fa'
@@ -7,6 +7,7 @@ import { SCROLL, apiUrl } from '../../config/App'
 import Header from '../header'
 import { useDispatch, useSelector } from 'react-redux'
 import { Fragment } from 'react'
+import { Confirm } from '../components'
 
 export default function Vehicles() {
   const dispatch = useDispatch()
@@ -54,6 +55,11 @@ export default function Vehicles() {
         if (isLoadMore && setLoadMore(false));
       }
     })
+  }
+
+  const _destroy = (id) => {
+    setState({ isDeleted: id })
+    dispatch(destroy(id)).then(res => res && setState({ isDeleted: null }))
   }
 
   const Transition = forwardRef((props, ref) => {
@@ -108,21 +114,20 @@ export default function Vehicles() {
 
                         {(Boolean(state.menuEl)) &&
                           <Menu
-                                anchorEl={state.menuEl}
-                                getContentAnchorEl={null}
-                                anchorOrigin={{
-                                  vertical: 'top',
-                                  horizontal: 'left'
-                                }}
-                                transformOrigin={{
-                                  vertical: 'top',
-                                  horizontal: 'right'
-                                }}
-                                TransitionComponent={window.innerWidth < 577 ? Transition : Fade}
-                                open={(index === parseInt(state.menuEl.id))}
-                                onClose={() => setState({ menuEl: null })}
-                                onClick={() => setState({ menuEl: null })}
-                            >
+                            anchorEl={state.menuEl}
+                            getContentAnchorEl={null}
+                            anchorOrigin={{
+                              vertical: 'top',
+                              horizontal: 'left'
+                            }}
+                            transformOrigin={{
+                              vertical: 'top',
+                              horizontal: 'right'
+                            }}
+                            TransitionComponent={window.innerWidth < 577 ? Transition : Fade}
+                            open={(index === parseInt(state.menuEl.id))}
+                            onClose={() => setState({ menuEl: null })}                            
+                          >
                             <MenuItem>
                               <FaClipboard size="0.8em" className="mr-4" />Notas
                             </MenuItem>
@@ -139,14 +144,22 @@ export default function Vehicles() {
                                 <FaPencilAlt size="0.8em" className="mr-4" />Editar
                               </Link>
                             </MenuItem>
-                            <MenuItem>
-                              <FaTrash size="0.8em" className="mr-4" />Apagar
+                            <MenuItem onClick={() => setState({ confirmEl: item.id }) }>
+                              <FaTrash size="0.8em" className="mr-4" />Apagar                             
                             </MenuItem>
                             <MenuItem>
                               <FaShare size="0.8em" className="mr-4" />Compartilhar
                             </MenuItem>
                           </Menu>
                         }
+
+                          {(state.confirmEl) &&
+                            <Confirm
+                              open={(item.id === state.confirmEl)}
+                              onConfirm={() => _destroy(item.id)}
+                              onClose={() => setState({ confirmEl: null })}
+                            />
+                          }
                       </div>
                     </div>
                   </Fragment>
