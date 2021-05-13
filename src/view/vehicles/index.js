@@ -8,6 +8,7 @@ import Header from '../header'
 import { useDispatch, useSelector } from 'react-redux'
 import { Fragment } from 'react'
 import { Confirm } from '../components'
+import { changeScreenA } from '../../store/ducks/navigation'
 
 export default function Vehicles() {
   const dispatch = useDispatch()
@@ -57,9 +58,9 @@ export default function Vehicles() {
     })
   }
 
-  const _destroy = (id) => {
-    setState({ isDeleted: id })
-    dispatch(destroy(id)).then(res => res && setState({ isDeleted: null }))
+  const _destroy = (data) => {
+    setState({ isDeleted: data.id })
+    dispatch(destroy(data)).then(res => res && setState({ isDeleted: null }))
   }
 
   const Transition = forwardRef((props, ref) => {
@@ -90,6 +91,11 @@ export default function Vehicles() {
               }
 
               <div className="p-2 p-md-3">
+                {(vehicles.data.length <= 0) &&
+                  <div className="d-flex justify-content-center">
+                    <h6 className="m-0">Nenhum veículo cadastrado</h6>
+                  </div>
+                }
                 {vehicles.data.map((item, index) => (
                   <Fragment key={index}>
                     <div className="d-flex my-3">
@@ -128,7 +134,7 @@ export default function Vehicles() {
                             open={(index === parseInt(state.menuEl.id))}
                             onClose={() => setState({ menuEl: null })}                            
                           >
-                            <MenuItem>
+                            <MenuItem onClick={() => dispatch(changeScreenA({open: true}))}>
                               <FaClipboard size="0.8em" className="mr-4" />Notas
                             </MenuItem>
                             <MenuItem>
@@ -156,7 +162,7 @@ export default function Vehicles() {
                           {(state.confirmEl) &&
                             <Confirm
                               open={(item.id === state.confirmEl)}
-                              onConfirm={() => _destroy(item.id)}
+                              onConfirm={() => _destroy(item)}
                               onClose={() => setState({ confirmEl: null })}
                             />
                           }

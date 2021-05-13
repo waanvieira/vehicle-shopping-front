@@ -99,11 +99,11 @@ export const destroyResponse = (payLoad) => ({
     payLoad
 })
 
-export const destroy = (id) => dispatch => {
-    return HttpAuth.delete('vehicles/' + id)
+export const destroy = (data) => dispatch => {
+    return HttpAuth.delete(`vehicles/destroy/${data.uuid}`)
         .then(response => {
             if (response.data.status === 200) {
-                dispatch(destroyResponse(id))
+                dispatch(destroyResponse(data.id))
             }
 
         })

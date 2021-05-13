@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  node:
+    image: node:12
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./:/var/www/react
+    working_dir: /var/www/react
+    command: 'npm start'
