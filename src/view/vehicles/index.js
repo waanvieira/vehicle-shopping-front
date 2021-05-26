@@ -8,7 +8,8 @@ import Header from '../header'
 import { useDispatch, useSelector } from 'react-redux'
 import { Fragment } from 'react'
 import { Confirm } from '../components'
-import { changeScreenA } from '../../store/ducks/navigation'
+import { changeScreenA, changeScreenC } from '../../store/ducks/navigation'
+import { FcOpenedFolder } from 'react-icons/fc'
 
 export default function Vehicles() {
   const dispatch = useDispatch()
@@ -63,6 +64,15 @@ export default function Vehicles() {
     dispatch(destroy(data)).then(res => res && setState({ isDeleted: null }))
   }
 
+  const notes = (id) => {
+    setState({menuEl: null})
+    dispatch(changeScreenC({
+        open: true,
+        type: 'notes',
+        uid: id
+      }))    
+  }
+
   const Transition = forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />
   })
@@ -91,8 +101,10 @@ export default function Vehicles() {
               }
 
               <div className="p-2 p-md-3">
-                {(vehicles.data.length <= 0) &&
+                {(vehicles.data.length != 0) &&
                   <div className="d-flex justify-content-center">
+                    {/* <FcOpenedFolder size="70"/> */}
+
                     <h6 className="m-0">Nenhum veículo cadastrado</h6>
                   </div>
                 }
@@ -134,7 +146,7 @@ export default function Vehicles() {
                             open={(index === parseInt(state.menuEl.id))}
                             onClose={() => setState({ menuEl: null })}                            
                           >
-                            <MenuItem onClick={() => dispatch(changeScreenA({open: true}))}>
+                            <MenuItem onClick={() => notes(item.id)}>
                               <FaClipboard size="0.8em" className="mr-4" />Notas
                             </MenuItem>
                             <MenuItem>

@@ -396,8 +396,8 @@ export default function Vehicles(props) {
                                         <div className="col-md-6 form-group">
                                             <label className="label-custom">Cor</label>
                                             <Select
-                                                value={data.vehicle.colors || ''}
-                                                onChange={event => dispatch(change({ colors: event.target.value }))}
+                                                value={data.vehicle.color_id || ''}
+                                                onChange={event => dispatch(change({ color_id: event.target.value }))}
                                             >
                                                 {data.colors.map(item => (
                                                     <MenuItem key={item.id} value={item.value}>{item.name}</MenuItem>
@@ -509,8 +509,8 @@ export default function Vehicles(props) {
                                 <div className="form-group">
                                     <label className="label-custom">Titulo da descrição</label>
                                     <TextField
-                                        value={data.vehicle.name || ''}
-                                        onChange={text => dispatch(change({ name: text.target.value }))}
+                                        value={data.vehicle.title || ''}
+                                        onChange={text => dispatch(change({ title: text.target.value }))}
                                         onFocus={() => setState({ ...state, tips: 3 })}
                                     />
                                 </div>

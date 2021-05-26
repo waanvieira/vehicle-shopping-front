@@ -6,6 +6,7 @@ import authReducer from './auth.reducer'
 import registerReducer from './register.reducer'
 import vehicleReducer from './vehicle.reducer'
 import NavigationDuck from '../ducks/navigation'
+import NotesDuck from '../ducks/notes'
 
 const rootReducer = combineReducers({
     loadingReducer,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
     authReducer,
     registerReducer,
     vehicleReducer,
-    NavigationDuck
+    NavigationDuck,
+    NotesDuck
 })
 
 export default rootReducer;

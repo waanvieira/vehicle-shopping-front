@@ -58,6 +58,7 @@ export default (state = initialState, { type, payLoad }) => {
             }
             
         case actionTypes.SCREEN_C:
+            console.warn(payLoad)
             return { 
                 ...state,
                 screenC: {
