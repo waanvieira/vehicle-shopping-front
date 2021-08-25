@@ -69,7 +69,10 @@ export default function Vehicles() {
     dispatch(changeScreenC({
         open: true,
         type: 'notes',
-        uid: id
+        props: {
+          uid: id,
+          type: 'vehicles'
+        }        
       }))    
   }
 
@@ -101,7 +104,7 @@ export default function Vehicles() {
               }
 
               <div className="p-2 p-md-3">
-                {(vehicles.data.length != 0) &&
+                {(vehicles.data.length == 0) &&
                   <div className="d-flex justify-content-center">
                     {/* <FcOpenedFolder size="70"/> */}
 
@@ -110,8 +113,8 @@ export default function Vehicles() {
                 }
                 {vehicles.data.map((item, index) => (
                   <Fragment key={index}>
-                    <div className="d-flex my-3">
-                      <div className="vehicle-img d-flex justify-content-center align-items-center">
+                    <div className="d-flex my-3 border-bottom">
+                      <div className="vehicle-img d-flex justify-content-center align-items-center my-3">
                         {(state.isDeleted === item.id) ?
                           <CircularProgress color="secondary" /> :
                           (item.cover && <img alt="" className="shadow rounded" src={`${apiUrl}/vehicles/photo/${item.cover.uuid}?width=180&height=135`} />)

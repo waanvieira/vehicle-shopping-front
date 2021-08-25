@@ -39,8 +39,8 @@ export default function Navigation() {
                 <div style={style}>
                     {(nav.screenC.type === 'notes') && 
                         <Notes 
-                            uid={nav.screenC.uid}
-                            type={nav.screenC.type}
+                            uid={nav.screenC.props.uid}
+                            type={nav.screenC.props.type}
                             props={nav.screenC.props}
                         />
                     }

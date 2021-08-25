@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 
-import { AppBar, CircularProgress, IconButton, Toolbar, Typography, useTheme } from '@material-ui/core';
+import { AppBar, CircularProgress, IconButton, Toolbar, Typography, useTheme, TextField } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { MdKeyboardBackspace } from 'react-icons/md';
+import { MdClose, MdKeyboardBackspace, MdSave, MdSend } from 'react-icons/md';
 import { changeScreenC } from '../../store/ducks/navigation';
-import { index, store, update, destroy } from '../../store/ducks/notes';
+import { index, store, update, destroy, change } from '../../store/ducks/notes';
 import { FcOpenedFolder } from 'react-icons/fc'
 
 export default function Notes(props) {
@@ -46,6 +46,35 @@ export default function Notes(props) {
         })
     }
 
+    const _store = () => {
+        setState({ isLoading: true })
+        let data =  {
+            uid: query.uid,
+            type: query.type
+        }
+
+        dispatch( store({...data, ...note})).then(res => {
+            if(res) {
+                dispatch(change('clear'))
+                setState({ isLoading: false})
+                document.getElementById('scroll').scroll({
+                    top: 0,
+                    behavior: 'smooth'
+                })
+            }
+        })
+    }
+
+    const _update = () => {
+        setState({ isLoading:true })
+        dispatch(update(update(note)).then(res => {
+            if (res) {
+                dispatch(change('clear'))
+                setState({ isLoading: false, isEdited: null })
+            }
+        }))
+    }
+
     return (
         //React fragment
         <>
@@ -73,6 +102,41 @@ export default function Notes(props) {
                             <h6 className="mt-4 text-muted">Nenhuma nota encontrada</h6>
                         </div>
                     }
+                    
+                    <div className="form">
+                        <TextField 
+                            autoFocus
+                            multiline
+                            placeholder="Digite uma nota"
+                            value={note.content || ''}
+                            onChange={ text => dispatch (change({ content: text.target.value }))}
+                        />
+                        <div className="send">
+                            {(state.isLoading) ? <CircularProgress /> :                            
+                                <>
+                                    {(state.isEdited) ?
+                                    <>
+                                    <IconButton onClick={() => {
+                                        dispatch(change('clear'))
+                                        setState({ isEdited: null })
+                                    }}>
+                                        <MdClose />
+                                    </IconButton>
+                                    <IconButton onClick={() => note.content && _update()}>
+                                         <MdSave color={(note.content) && theme.palette.secondary.main}/>
+                                    </IconButton>
+
+                                     </>
+                                     :                                     
+                                    <IconButton onClick={() =>  _store()}>
+                                        <MdSend color={(note.content) && theme.palette.secondary.main}/>
+                                    </IconButton>
+                                    }
+
+                                </>
+                            }
+                        </div>
+                    </div>
                 </>
 
             }

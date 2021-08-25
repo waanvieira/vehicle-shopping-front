@@ -9,6 +9,11 @@ export const actionTypes = {
     CHANGE: 'NOTE_CHANGE'
 }
 
+export const change = (payLoad) => ({
+    type: actionTypes.CHANGE,
+    payLoad
+})
+
 export const indexResponse = (payLoad, isLoadMore) => ({
     type: actionTypes.INDEX,
     payLoad,
@@ -17,7 +22,7 @@ export const indexResponse = (payLoad, isLoadMore) => ({
 
 export const index = (query, isLoadMore) => dispatch => {
     return HttpAuth.get(`/notes?` + new URLSearchParams(query))
-        .then(res => typeof res != 'undefined' && dispatch(indexResponse(res.data, isLoadMore)))
+        .then(res => typeof res !== 'undefined' && dispatch(indexResponse(res.data, isLoadMore)))
 }
 
 export const storeResponse = (payLoad) => ({
@@ -39,7 +44,7 @@ export const updateResponse = (payLoad) => ({
 export const update = (data) => dispatch => {
     return HttpAuth.put(`/notes/${data.uuid}`, data)
         .then(res => {
-            if (typeof res != 'undefined') {
+            if (typeof res !== 'undefined') {
                 if (res.data.status === 200) {
                     dispatch(updateResponse(data))
                 }
@@ -76,7 +81,7 @@ const initialState = {
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (state = initialState, { type, payLoad, isLoadMore }) => {
-    switch (type) {        
+    switch (type) {
         case actionTypes.INDEX:
 
             if (isLoadMore) {
@@ -123,15 +128,14 @@ export default (state = initialState, { type, payLoad, isLoadMore }) => {
                 }
             }
 
-        case actionTypes.CHANGE:        
-
-        return {
-            ...state,
-            note: (payLoad === 'clear') ? {} : {
-                ...state.note,
-                payLoad
+        case actionTypes.CHANGE:
+            return {
+                ...state,
+                note: (payLoad === 'clear') ? {} : {
+                    ...state.note,
+                    ...payLoad
+                }
             }
-        }
 
         default:
             return state

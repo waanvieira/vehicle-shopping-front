@@ -79,3 +79,35 @@ body {
     font-size: 22px;
     color: #444;    
 }
+
+.MuiMenuItem-root {
+    padding-top: 9px  !important;
+    padding-bottom: 9px  !important;
+    font-weight: 500 !important;
+}
+
+.scrooll, .scrooll-form {
+    height: calc(100vh -64px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-top: 64px;
+}
+
+.scrooll-form {
+    height: calc(100vh - 140px);
+    margin-bottom: 76px;
+}
+
+.notes .form {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
+    padding: 5px 15px 15px;
+}
+
+.notes .send {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}

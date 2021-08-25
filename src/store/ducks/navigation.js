@@ -38,37 +38,38 @@ const initialState = {
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default (state = initialState, { type, payLoad }) => {
+export default (state = initialState, {
+    type,
+    payLoad
+}) => {
     switch (type) {
 
         case actionTypes.SCREEN_A:
-            return { 
+            return {
                 ...state,
                 screenA: {
                     ...payLoad
                 }
             }
-            
-        case actionTypes.SCREEN_B:
-            return { 
-                ...state,
-                screenB: {
-                    ...payLoad
-                }
-            }
-            
-        case actionTypes.SCREEN_C:
-            console.warn(payLoad)
-            return { 
-                ...state,
-                screenC: {
-                    ...payLoad
-                }
-            }
 
-        default:
-            return state
+            case actionTypes.SCREEN_B:
+                return {
+                    ...state,
+                    screenB: {
+                        ...payLoad
+                    }
+                }
+
+                case actionTypes.SCREEN_C:
+                    return {
+                        ...state,
+                        screenC: {
+                            ...payLoad
+                        }
+                    }
+
+                    default:
+                        return state
     }
 
 }
-
