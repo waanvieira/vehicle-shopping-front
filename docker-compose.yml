@@ -2,10 +2,23 @@ version: '3'
 
 services:
   node:
-    image: node:12
+    container_name: react-app
+    build:
+      context: ./
+      dockerfile: Dockerfile
     ports:
       - '3000:3000'
     volumes:
-      - ./:/var/www
-    working_dir: /var/www
+      - ./:/app
+    working_dir: /app
+    tty: true
     command: 'npm start'
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.57.0/24
+
+  
